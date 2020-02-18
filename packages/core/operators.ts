@@ -11,7 +11,7 @@ const createOperator = method => <T>(
         return;
     }
 
-    return structure.action({ method, data, meta });
+    return (structure as any).action({ method, data, meta });
 };
 
 export const create = createOperator("create");
