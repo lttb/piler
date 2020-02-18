@@ -1,0 +1,11 @@
+{
+    "exclude": ["node_modules", "lib"],
+    "compilerOptions": {
+        "lib": ["dom", "es2020"],
+        "jsx": "react",
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "target": "ES2019",
+        "allowJs": true
+    }
+}
