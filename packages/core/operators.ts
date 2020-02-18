@@ -1,7 +1,9 @@
+import { Collection } from "./types";
+
 export const PENDING = new WeakSet();
 
-const createOperator = method => (
-    structure,
+const createOperator = method => <T>(
+    structure: Collection<T>,
     data = undefined,
     meta = undefined
 ) => {

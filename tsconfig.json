@@ -1,11 +1,15 @@
 {
     "exclude": ["node_modules", "lib"],
     "compilerOptions": {
+        "baseUrl": ".",
         "lib": ["dom", "es2020"],
         "jsx": "react",
         "esModuleInterop": true,
         "skipLibCheck": true,
         "target": "ES2019",
+        "paths": {
+            "@piler/*": ["./packages/*/index.ts"]
+        },
         "allowJs": true
     }
 }

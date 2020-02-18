@@ -1,6 +1,7 @@
 import nanoid from "nanoid";
 
 import { Store } from "./store";
+import { Collection } from "./types";
 
 type Action = { type: string; payload: any; meta?: object };
 
@@ -142,12 +143,6 @@ const createActionEffect = ({ type, key, api, store }) => async ({
     );
     return true;
 };
-
-export type Collection<T> = { [key: string]: T } & {
-    readonly __private__: unique symbol;
-};
-
-export type Model<T> = T & { readonly __private__: unique symbol };
 
 const createStructure = ({ api, key, type, store }) => {
     const path = [type, key].join("/");
