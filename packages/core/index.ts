@@ -1,6 +1,10 @@
 import { createReducer } from "./structures";
 import { Store } from "./store";
 
+export * from "./structures";
+export * from "./store";
+export * from "./types";
+
 export const store = new Store(createReducer);
 
 export const {
@@ -12,7 +16,3 @@ export const {
     destroy,
     getStatus
 } = store;
-
-export * from "./structures";
-export * from "./store";
-export * from "./types";
