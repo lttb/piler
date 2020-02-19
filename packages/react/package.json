@@ -1,6 +1,6 @@
 {
     "name": "@piler/react",
-    "version": "0.0.1-alpha.5",
+    "version": "0.0.1-alpha.6",
     "description": "",
     "main": "index.js",
     "scripts": {
@@ -13,7 +13,7 @@
         "access": "public"
     },
     "dependencies": {
-        "@piler/core": "0.0.1-alpha.5"
+        "@piler/core": "0.0.1-alpha.6"
     },
     "devDependencies": {
         "@types/react": "16.9.20",
