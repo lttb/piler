@@ -1,10 +1,35 @@
-import { PENDING } from "./operators";
-
 export class Store {
     reducers = {};
     state = {};
     pending = {};
     subscribers = {};
+
+    PENDING = new WeakSet();
+
+    createOperator = method => <T>(
+        structure: Collection<T>,
+        data = undefined,
+        meta = undefined
+    ) => {
+        if (!structure) {
+            return;
+        }
+
+        return (structure as any).action({ method, data, meta, store: this });
+    };
+
+    create = this.createOperator("create");
+    get = this.createOperator("get");
+    update = this.createOperator("update");
+    replace = this.createOperator("replace");
+    remove = this.createOperator("remove");
+    destroy = this.createOperator("destroy");
+
+    getStatus = data => {
+        if (data === null || data === undefined) return "UNSET";
+
+        return this.PENDING.has(data) ? "PENDING" : "FULFILLED";
+    };
 
     constructor(cb) {
         const fn = {
@@ -67,7 +92,7 @@ export class Store {
     dispatch = action => {
         if (!(action.type in this.reducers)) return;
 
-        const { type, key, task } = action.payload;
+        const { type, key, task, method } = action.payload;
         const reducer = this.reducers[action.type];
 
         const updated = [];
@@ -77,22 +102,26 @@ export class Store {
         const state = (this.state[type][key] = this.state[type][key] || {});
 
         if (task === "request") {
-            PENDING.add(state);
+            this.PENDING.add(state);
         } else {
-            PENDING.delete(state);
+            this.PENDING.delete(state);
         }
 
         reducer(state, action.payload, id => {
             if (!id) return;
 
             if (task === "request") {
-                PENDING.add(state[id]);
+                this.PENDING.add(state[id]);
             } else {
-                PENDING.delete(state[id]);
+                this.PENDING.delete(state[id]);
             }
 
             updated.push(id);
         });
+
+        if (method === "destroy") {
+            delete this.state[type][key];
+        }
 
         this.emitLink([type], this.state[type]);
         this.emitLink([type, key], this.state[type][key]);

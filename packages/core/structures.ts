@@ -1,6 +1,5 @@
 import nanoid from "nanoid";
 
-import { Store } from "./store";
 import { Collection } from "./types";
 
 type Action = { type: string; payload: any; meta?: object };
@@ -34,12 +33,13 @@ const actions = {
     get: createActions(`@piler`, "get"),
     update: createActions(`@piler`, "update"),
     replace: createActions(`@piler`, "replace"),
-    remove: createActions(`@piler`, "remove")
+    remove: createActions(`@piler`, "remove"),
+    destroy: createActions(`@piler`, "destroy")
 };
 
-export const store = new Store(reducer =>
+export const createReducer = reducer =>
     reducer
-        .on([actions.create.request], () => {})
+        .on([actions.create.request, actions.destroy.request], () => {})
         .on(
             [
                 actions.get.request,
@@ -86,13 +86,13 @@ export const store = new Store(reducer =>
                 delete collection[id];
                 cb(id);
             }
-        })
-);
+        });
 
-const createActionEffect = ({ type, key, api, store }) => async ({
+const createActionEffect = ({ type, key, api }) => async ({
     method,
     data,
-    meta
+    meta,
+    store
 }) => {
     const { dispatch } = store;
 
@@ -126,7 +126,7 @@ const createActionEffect = ({ type, key, api, store }) => async ({
                     meta
                 )
             );
-            return false;
+            throw error;
         }
     }
     dispatch(
@@ -141,29 +141,28 @@ const createActionEffect = ({ type, key, api, store }) => async ({
             meta
         )
     );
-    return true;
+    return nextData;
 };
 
-const createStructure = ({ api, key, type, store }) => {
+const createStructure = ({ api, key, type }) => {
     const path = [type, key].join("/");
 
     return {
         type,
         key,
         path,
-        store,
-        action: createActionEffect({ type, key, api, store })
+        action: createActionEffect({ type, key, api })
     };
 };
 
 export function createCollection<T>(api): Collection<T> {
     const key = nanoid();
     const type = "collection";
-    return createStructure({ api, key, type, store }) as any;
+    return createStructure({ api, key, type }) as any;
 }
 
 export function createModel<T>(api) {
     const key = nanoid();
     const type = "model";
-    return createStructure({ api, key, type, store });
+    return createStructure({ api, key, type });
 }
