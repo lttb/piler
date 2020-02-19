@@ -1,3 +1,5 @@
+import { Collection } from "./types";
+
 export class Store {
     reducers = {};
     state = {};
