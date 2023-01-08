@@ -1,0 +1,27 @@
+{
+    "name": "root",
+    "private": true,
+    "description": "",
+    "workspaces": [
+        "packages/*",
+        "examples/*"
+    ],
+    "scripts": {
+        "prepublishOnly": "lerna run build",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/lttb/piler.git"
+    },
+    "author": "Kenzhaev Artur <kenzhaev.artur@gmail.com>",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/lttb/piler/issues"
+    },
+    "homepage": "https://github.com/lttb/piler#readme",
+    "devDependencies": {
+        "lerna": "^3.18.1",
+        "copyfiles": "2.2.0"
+    }
+}
